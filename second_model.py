@@ -26,7 +26,7 @@ net = Net()
 device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 net.to(device)
 
-checkpoint_path = f"training_log/checkpoints_80000"
+checkpoint_path = f"checkpoint_80000"
 state_dict = {}
 for k, v in torch.load(checkpoint_path , map_location=torch.device('cpu'))['state_dict'].items():
    state_dict[k[7:]]=v
