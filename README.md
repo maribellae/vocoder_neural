@@ -11,10 +11,8 @@
 
 3)  `python preprocess_to_second.py`
 
-4)   Download this checkpoints : 
-
+4)   Download these checkpoints :
 https://drive.google.com/file/d/12jW1KivfEjv4YBs6gAZVdVWJ-muZv6CQ/view
-
 
 and place it in a FastSpeech2/ folder ( FastSpeech2/checkpoint_80000 )
 
