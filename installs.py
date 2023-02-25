@@ -1,6 +1,3 @@
-!pip install speechbrain
-!pip install torchinfo
-!pip install pyworld
 from speechbrain.pretrained import EncoderDecoderASR
 from torchinfo import summary
 import numpy as np
@@ -59,8 +56,7 @@ from audio_processing import pitch
 from text import phonemes_to_sequence
 import pandas as pd
 
-!git clone https://github.com/carankt/FastSpeech2
-%cd FastSpeech2
+
 import os
 #os.environ["CUDA_VISIBLE_DEVICES"] = '1'
 
