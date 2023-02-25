@@ -95,6 +95,14 @@ from stft import TacotronSTFT
 from utils.utils import read_wav_np
 from audio_processing import pitch
 
+import torch
+import torch.nn as nn
+import torch.utils.data as data
+import torch.optim as optim
+import torch.nn.functional as F
+import torchaudio
+import numpy as np
+
 import librosa
 import shutil
 from speechbrain.utils.data_utils import download_file
