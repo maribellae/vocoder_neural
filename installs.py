@@ -64,9 +64,7 @@ import warnings
 warnings.filterwarnings("ignore")
 
 import matplotlib.pyplot as plt
-%matplotlib inline
-!pip install unidecode
-!pip install g2p_en
+
 import unidecode
 import IPython.display as ipd
 import pickle as pkl
