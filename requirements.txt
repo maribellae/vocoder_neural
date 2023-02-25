@@ -49,11 +49,6 @@ jedi==0.18.1
 Jinja2==3.1.2
 joblib==1.2.0
 jsonschema==4.16.0
-jupyter_client==7.4.8
-jupyter_core==4.11.1
-jupyter-server==1.23.4
-jupyterlab-pygments==0.1.2
-jupyterlab-widgets==3.0.5
 keras==2.10.0
 Keras-Preprocessing==1.1.2
 kiwisolver==1.4.4
@@ -65,12 +60,6 @@ MarkupSafe==2.1.2
 matplotlib==3.5.3
 matplotlib-inline==0.1.6
 mistune==0.8.4
-nb-conda-kernels==2.3.1
-nbclassic==0.4.8
-nbclient==0.5.13
-nbconvert==6.4.4
-nbformat==5.7.0
-nest-asyncio==1.5.6
 nltk==3.8.1
 notebook==6.5.2
 notebook_shim==0.2.2
