@@ -1,5 +1,6 @@
 !pip install speechbrain
 !pip install torchinfo
+!pip install pyworld
 from speechbrain.pretrained import EncoderDecoderASR
 from torchinfo import summary
 import numpy as np
@@ -45,6 +46,18 @@ import torchvision
 import torchvision.transforms as transforms
 import torch.nn as nn
 import torch.nn.functional as F
+import os
+import glob
+import tqdm
+import torch
+import argparse
+import numpy as np
+import hparams as hp
+from stft import TacotronSTFT
+from utils.utils import read_wav_np
+from audio_processing import pitch
+from text import phonemes_to_sequence
+import pandas as pd
 
 !git clone https://github.com/carankt/FastSpeech2
 %cd FastSpeech2
