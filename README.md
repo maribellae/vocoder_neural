@@ -16,7 +16,7 @@
 https://drive.google.com/file/d/12jW1KivfEjv4YBs6gAZVdVWJ-muZv6CQ/view
 
 
-and place it in a FastSpeech2/ folder
+and place it in a FastSpeech2/**training_log** folder (first create it)
 
 5)  `python second_model.py`
 6)  `python train.py`
