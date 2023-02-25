@@ -1,17 +1,14 @@
 # vocoder_neural
 
-0) `git clone https://github.com/carankt/FastSpeech2 `
+1) `git clone https://github.com/carankt/FastSpeech2 `
 
    ` cd FastSpeech2 `
    
    ` git clone https://github.com/maribellae/vocoder_neural `
    
-1) Download requirements.txt 
+2) Download requirements.txt 
 
 `pip install -r vocoder_neural/requirements.txt`
-
-
-2)  `python vocoder_neural/installs.py`
 
 3)  `python vocoder_neural/preprocess_to_second.py`
 
