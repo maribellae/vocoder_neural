@@ -109,6 +109,30 @@ from speechbrain.utils.data_utils import download_file
 from speechbrain.pretrained import EncoderDecoderASR
 
 
+import matplotlib
+
+import pylab
+import librosa
+import librosa.display
+import numpy as np
+
+import IPython
+import IPython.display as ipd
+
+import os, argparse
+import torch
+import torch.nn as nn
+import torch.nn.functional as F
+from modules.model import Model
+from modules.loss import TransformerLoss
+import hparams
+from text import *
+from utils.utils import *
+from utils.writer import get_writer
+from utils.plot_image import *
+
+
+
 
 MINILIBRI_TEST_URL = "https://www.openslr.org/resources/12/test-clean.tar.gz"
 download_file(MINILIBRI_TEST_URL, 'test-clean.tar.gz')
