@@ -4,7 +4,7 @@
 
    cd FastSpeech2
    
-   git clone https://github.com/maribellae/vocoder_neural`
+   git clone https://github.com/maribellae/vocoder_neural `
    
 1) Download requirements.txt 
 
