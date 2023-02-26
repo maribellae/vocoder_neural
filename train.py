@@ -123,24 +123,14 @@ from text import *
 from utils.utils import *
 from utils.writer import get_writer
 from utils.plot_image import *
+import random
 
+device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
+from second_model import model3,net
+model3.to(device)
+net.to(device)
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+from preprocess_to_second import text_padded, input_lengths, mel_pad, output_lengths, pitch_padded, energy_padded
 
 
 optimizer = torch.optim.Adam(  list(model3.parameters()) + list(net.parameters())  , lr=3e-4)
@@ -205,7 +195,7 @@ def train(model3,net, device, data_len ,vector_w, mels,pitches, energies,  crite
         
      #   out_audio = audio.cpu().float().numpy().astype(np.float32, order='C')
         
-return(mel_output,full_loss)    
+    return(mel_output,full_loss)    
 
 
 
