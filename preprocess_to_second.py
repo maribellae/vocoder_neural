@@ -126,7 +126,7 @@ from utils.plot_image import *
 
 
 
-print("all imported") 
+#print("all imported") 
 MINILIBRI_TEST_URL = "https://www.openslr.org/resources/12/test-clean.tar.gz"
 #download_file(MINILIBRI_TEST_URL, 'test-clean.tar.gz')
 #shutil.unpack_archive( 'test-clean.tar.gz', '.')
@@ -185,7 +185,7 @@ stft = TacotronSTFT(filter_length=hp.n_fft,
                         
 rel_length = torch.tensor([1.0 ]).to(device)
 
-N_SAMPLES= 4800
+N_SAMPLES= 480000
 def pad_or_trim(array, length: int = N_SAMPLES, *, axis: int = -1):
     """
     Pad or trim the audio array to N_SAMPLES, as expected by the encoder.
@@ -240,8 +240,8 @@ for audios in tqdm(loader):
     p = p[:mel.shape[1]]
     p = np.array(p, dtype='float32')
     datas.append([predicted_tokens[0],mel,p,e])    
-    if (i==10):
-      break                    
+  #  if (i==10):
+   #   break                    
                         
 def PaddingData(batch):
         input_lengths, ids_sorted_decreasing = torch.sort(torch.LongTensor([len(x[0]) for x in batch]),dim=0, descending=True)
