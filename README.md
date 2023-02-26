@@ -10,10 +10,6 @@
 
 `pip install -r vocoder_neural/requirements.txt`
 
-3)  `python vocoder_neural/preprocess_to_second.py`
+3)   Download [these](https://drive.google.com/file/d/12jW1KivfEjv4YBs6gAZVdVWJ-muZv6CQ/view) checkpoints and place them in a FastSpeech2/ folder ( FastSpeech2/checkpoint_80000 )
 
-4)   Download [these](https://drive.google.com/file/d/12jW1KivfEjv4YBs6gAZVdVWJ-muZv6CQ/view) checkpoints and place them in a FastSpeech2/ folder ( FastSpeech2/checkpoint_80000 )
-
-5)  `python vocoder_neural/second_model.py`
-
-6)  `python vocoder_neural/train.py`
+4)  `python vocoder_neural/train.py`
