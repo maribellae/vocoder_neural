@@ -14,6 +14,6 @@
 
 4)   Download [these](https://drive.google.com/file/d/12jW1KivfEjv4YBs6gAZVdVWJ-muZv6CQ/view) checkpoints and place them in a FastSpeech2/ folder ( FastSpeech2/checkpoint_80000 )
 
-5)  `python second_model.py`
+5)  `python vocoder_neural/second_model.py`
 
-6)  `python train.py`
+6)  `python vocoder_neural/train.py`
