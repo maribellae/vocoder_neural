@@ -204,4 +204,4 @@ epochs = 10
 iter_meter = IterMeter()
 for epoch in range(1, epochs + 1):
       #trainn(model3, device,len(train_loader.dataset), waveforms ,vector_w, vector_m, criterion, optimizer,  iter_meter)
-      last_mel , full_loss  =train(model3, net, device,100,text_padded, mel_pad, pitch_padded,energy_padded, criterion, optimizer,  iter_meter)
+      last_mel , full_loss  =train(model3, net, device,2620,text_padded, mel_pad, pitch_padded,energy_padded, criterion, optimizer,  iter_meter)
