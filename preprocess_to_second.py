@@ -229,7 +229,7 @@ for audios in tqdm(loader):
     audios = audios.astype(np.float32)
 
     p = pitch(audios)  # [T, ] T = Number of frames 
-    print(p.shape)
+  #  print(p.shape)
     audios = torch.from_numpy(audios).unsqueeze(0)
     mel, mag = stft.mel_spectrogram(audios) # mel [1, 80, T]  mag [1, num_mag, T]
     mel = mel.squeeze(0) # [num_mel, T]
