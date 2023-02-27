@@ -190,7 +190,7 @@ def train(model3,net, device, data_len ,vector_w, mels,pitches, energies,  crite
         iter_meter.step()
         #if i % 100 == 0 or i == data_len:
          #   print('Train Epoch: {} [{}/{} ({:.0f}%)]\tLoss: {:.6f}'.format(i ,  loss.item()))
-        print("I IS ",  i , "LOSS IS " , loss.item())
+       # print("I IS ",  i , "LOSS IS " , loss.item())
         full_loss +=loss.item() 
         
      #   out_audio = audio.cpu().float().numpy().astype(np.float32, order='C')
@@ -205,3 +205,4 @@ iter_meter = IterMeter()
 for epoch in range(1, epochs + 1):
       #trainn(model3, device,len(train_loader.dataset), waveforms ,vector_w, vector_m, criterion, optimizer,  iter_meter)
       last_mel , full_loss  =train(model3, net, device,2620,text_padded, mel_pad, pitch_padded,energy_padded, criterion, optimizer,  iter_meter)
+      print("Epoch  ",  epoch , "LOSS IS  " , full_loss)
