@@ -1,3 +1,6 @@
+import sys
+sys.path.append("..")
+
 from torchinfo import summary
 import numpy as np
 import matplotlib.pyplot as plt

@@ -6,15 +6,15 @@
    
    ` git clone https://github.com/maribellae/vocoder_neural `
    
-2) Download requirements.txt 
+2) proceed to `./vocoder_neural`
 
-`pip install -r vocoder_neural/requirements.txt`
+`pip install -r requirements.txt`
 
 
 3)   Download [these](https://drive.google.com/file/d/12jW1KivfEjv4YBs6gAZVdVWJ-muZv6CQ/view) checkpoints and place them into FastSpeech2/ folder ( FastSpeech2/checkpoint_80000 )
 
 
-4)  `python vocoder_neural/download_dataset.py`
+4)  `python download_dataset.py`
 
 
-5)  `python vocoder_neural/train.py`
+5)  `python train.py`

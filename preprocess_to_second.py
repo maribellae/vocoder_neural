@@ -129,10 +129,12 @@ from utils.plot_image import *
 #print("all imported") 
 
 from speechbrain.pretrained import EncoderDecoderASR
-device = "cuda" if torch.cuda.is_available() else "cpu"
+device = "cpu" #"cuda" if torch.cuda.is_available() else "cpu"
 
-asr_model = EncoderDecoderASR.from_hparams(source="speechbrain/asr-transformer-transformerlm-librispeech", savedir="pretrained_models/asr-transformer-transformerlm-librispeech",  run_opts={"device":"cuda"},)
-
+asr_model = EncoderDecoderASR.from_hparams(source="speechbrain/asr-transformer-transformerlm-librispeech", 
+                                           savedir="pretrained_models/asr-transformer-transformerlm-librispeech",
+                                           run_opts={"device":device},)
+print(asr_model)
 class LibriSpeech(torch.utils.data.Dataset):
     """
     A simple class to wrap LibriSpeech and trim/pad the audio to 30 seconds.
@@ -207,7 +209,7 @@ def pad_or_trim(array, length: int = N_SAMPLES, *, axis: int = -1):
 
     return array
     
-from tqdm.notebook import tqdm
+from tqdm import tqdm
 
 i=0
 for audios in tqdm(loader):
@@ -215,7 +217,9 @@ for audios in tqdm(loader):
     with torch.no_grad():
       # wav=pad_or_trim(audios.flatten()).to(device)
        res=asr_model.encode_batch(pad_or_trim(audios).to(device),rel_length).to(device)
-       predicted_tokens, _ = asr_model.mods.decoder(res, rel_length)
+       print(res.shape)
+       with torch.no_grad():
+        predicted_tokens, _ = asr_model.mods.decoder(res, rel_length)
    # print(audios.shape)
     audios = audios[0].cpu().numpy()
 
