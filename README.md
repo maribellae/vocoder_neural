@@ -11,7 +11,7 @@
 `pip install -r requirements.txt`
 
 
-3)   Download [these](https://drive.google.com/file/d/12jW1KivfEjv4YBs6gAZVdVWJ-muZv6CQ/view) checkpoints and place them into FastSpeech2/ folder ( FastSpeech2/checkpoint_80000 )
+3)   Download [these](https://drive.google.com/file/d/12jW1KivfEjv4YBs6gAZVdVWJ-muZv6CQ/view) checkpoints and place them into ./ folder ( ./checkpoint_80000 )
 
 
 4)  `python download_dataset.py`

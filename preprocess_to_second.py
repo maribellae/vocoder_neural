@@ -129,10 +129,14 @@ from utils.plot_image import *
 #print("all imported") 
 
 from speechbrain.pretrained import EncoderDecoderASR
-device = "cpu" #"cuda" if torch.cuda.is_available() else "cpu"
+device = "cuda" if torch.cuda.is_available() else "cpu"
 
-asr_model = EncoderDecoderASR.from_hparams(source="speechbrain/asr-transformer-transformerlm-librispeech", 
-                                           savedir="pretrained_models/asr-transformer-transformerlm-librispeech",
+# asr_model = EncoderDecoderASR.from_hparams(source="speechbrain/asr-transformer-transformerlm-librispeech", 
+#                                            savedir="pretrained_models/asr-transformer-transformerlm-librispeech",
+#                                            run_opts={"device":device},)
+
+asr_model = EncoderDecoderASR.from_hparams(source="speechbrain/asr-crdnn-rnnlm-librispeech", 
+                                           savedir="pretrained_models/speechbrain/asr-crdnn-rnnlm-librispeech",
                                            run_opts={"device":device},)
 print(asr_model)
 class LibriSpeech(torch.utils.data.Dataset):
