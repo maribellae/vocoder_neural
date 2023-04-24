@@ -121,7 +121,7 @@ from modules.loss import TransformerLoss
 import hparams
 from text import *
 from utils.utils import *
-#from utils.writer import get_writer
+
 from utils.plot_image import *
 
 
@@ -152,10 +152,8 @@ class MyFastSpeech(Model):
         super(MyFastSpeech,self).__init__(hparams)
         self.hp = hp
         self.load_state_dict(state_dict)
-        self.Embedding = nn.Linear(1, 256) 
-       # self.Embedding = self.Embedding                                              # NEED
-        self.mylin3 = nn.Linear(10, 40)  #to upsample output from mel-spectro            # NEED
-
+        self.Embedding = nn.Linear(1, 256)                                         
+        self.mylin3 = nn.Linear(10, 40)  #to upsample output from mel-spectro            
         
         self.alpha1 = self.alpha1
         self.alpha2 = self.alpha2
@@ -164,12 +162,12 @@ class MyFastSpeech(Model):
         self.Encoder = self.Encoder
         self.Decoder =  self.Decoder 
 
-        self.Duration =self.Duration                                                     # NEED
-        self.Pitch = self.Pitch                                                          # NEED
-        self.Energy =self.Energy                                                         # NEED
-        #self.myNorm = nn.LayerNorm(256)                                                                                # but they are w the same architecture
+        self.Duration =self.Duration                                                     
+        self.Pitch = self.Pitch                                                          
+        self.Energy =self.Energy                                                         
+        #self.myNorm = nn.LayerNorm(256)                                                                              
 
-        self.Projection =self.Projection                                                 # NEED
+        self.Projection =self.Projection                                                 
         
         self.myconv1 = nn.Conv2d(1, 3, 3)
         self.mypool = nn.MaxPool2d(2, 2)
@@ -194,137 +192,88 @@ class MyFastSpeech(Model):
     def inference(self, text,padded,len,alpha=1.0):
               padded.requires_grad_()
               text.requires_grad_()
-             # print(padded)
-             # padded = 100*padded
+
               padded1 = self.mypool(F.relu(self.myconv1(padded)))
-            #  print(padded1)
+
               padded2 = self.mypool(F.relu(self.myconv2(padded1)))
-           #   print(padded2)
+
               padded3 = torch.flatten(padded2, 1)
-           #   print(padded3)
+
               padded4 = F.relu(self.myfc1(padded3))
-            #  print(padded4)
+
               padded5 = F.relu(self.myfc2(padded4))
-           #   print(padded5)
+
               melstext = self.myfc3(padded5)
-             # melstext.requires_grad_() 
-          #    print('1',melstext)             
+             
               device = torch.device("cuda" )
-             # print(text)
-              text_lengths = torch.tensor([text.shape[0]])      # [L]                              #torch.tensor([1, text.size(1)])
-             # print(text_lengths)
+
+              text_lengths = torch.tensor([text.shape[0]])      
+
               mel_lengths = torch.tensor([len])
-              #mel_lengths = len
-             # print(text.shape)
-            #  text = text.T
               text = text.unsqueeze(0) 
 
-          #    print('2',text)
-                          
-             # print(text.shape)
               ### Prepare Inputs ###
-              
+            
               encoder_input = self.Embedding(text).transpose(0,1)
-          #    print('3',encoder_input)
-            #  encoder_input = self.myNorm(encoder_input)
-              #print(encoder_input.shape)
-              encoder_input += self.alpha1*(self.pe[:text.size(1)].unsqueeze(1))
-         #     print('4',encoder_input)
 
-            #  encoder_input = self.dropout(encoder_input)
-             # print(encoder_input.shape)
+              encoder_input += self.alpha1*(self.pe[:text.size(1)].unsqueeze(1))
+
               ### Speech Synthesis ###
               
               hidden_states = encoder_input
-           #   print('5',hidden_states)
 
               text_mask = text.new_zeros(1,text.size(1)).to(torch.bool)
-              #mel_mask = text.new_zeros(1, len).to(torch.bool)
-              
-              #text_mask = get_mask_from_lengths(text_lengths)
-              #mel_mask = get_mask_from_lengths(mel_lengths)
+
               text_mask = text_mask.to(device)
-              #mel_mask=mel_mask.to(device)
+
               for layer in self.Encoder:
                   hidden_states, _ = layer(hidden_states,
                                           src_key_padding_mask=text_mask)
-           #   print('6',hidden_states)
+
 
               #with info about mel
                 
               mel_info = self.mylin3(melstext)
-              #mel_info.requires_grad_()   
-            #  print('7',mel_info)           
+      
               ### Duration Predictor ###
 
               durations1 = self.Duration(hidden_states.permute(1,2,0))
-          #    print('8',durations1)
-             
-            # print(len)
                
               if (durations1.size(1)- mel_info.size(1))>=0 :
                    mel_info = torch.nn.functional.pad(mel_info  ,  (1,durations1.size(1)- mel_info.size(1)-1 ), "constant", 0)
               else:
                    durations1 = torch.nn.functional.pad(durations1 ,  (1,mel_info.size(1)-durations1.size(1) -1), "constant", 0)
-          #    print('9', durations1)
+
               durations = mel_info  + durations1 
-          #    print('10', durations)
-                           
-              #print( hidden_states.shape)
-            #  hidden_padded = torch.zeros(durations.shape[1],1,256)
-            #  hidden_padded = hidden_padded.to(device)
-            #  hidden_padded[:hidden_states.shape[0],:,:] = hidden_states
-            #  hidden_padded.requires_grad_()
-            #  print('fgffffff',hidden_padded)
-            #  hidden_states_expanded = self.LR(hidden_padded, durations, alpha, inference=True)
 
               hidden_states_expanded = self.LR(hidden_states, durations)
-          #    print('11',hidden_states_expanded)
-            #  hidden_states_expanded.requires_grad_()
-             # print(hidden_states_expanded)
 
-              #print(hidden_states_expanded.shape, "hidden states expanded")
+
               if(hidden_states_expanded.size(0))>5000:
                       print("CUTTED")
                       hidden_states_expanded = hidden_states_expanded[:5000,:,:]
 
 
               pitch = self.Pitch(hidden_states_expanded.permute(1,2,0))
-         #     print('12',pitch)
+
               energy = self.Energy(hidden_states_expanded.permute(1,2,0))
-        #      print('13',energy)
-            #  print(pitch.shape, "P S")
+
               pitch_one_hot = pitch_to_one_hot(pitch)
-             
-          #    print('14',pitch_one_hot)
 
               energy_one_hot = energy_to_one_hot(energy)
-              
-             # print(self.pe.size())
-         #     print('15',energy_one_hot)             
+            
               hidden_states_expanded = hidden_states_expanded + pitch_one_hot.transpose(1,0) + energy_one_hot.transpose(1,0)       #check for all device attributes
-        #      print('16',hidden_states_expanded)
-
-         
-              
               hidden_states_expanded += self.alpha2*self.pe[:hidden_states_expanded.size(0)].unsqueeze(1)
-            #  print('17',hidden_states_expanded)
-            #  hidden_states_expanded = self.dropout(hidden_states_expanded)
-            #  hidden_states_expanded += self.alpha2*self.pe[:len].unsqueeze(1)
-              
-
-              
+           
               mel_mask = text.new_zeros(1, hidden_states_expanded.size(0)).to(torch.bool)
-              #print(mel_mask.shape, "Shape of mel Mask")
+            
               for layer in self.Decoder:
                   hidden_states_expanded, _ = layer(hidden_states_expanded,
                                                     src_key_padding_mask=mel_mask)
-             # print('18',hidden_states_expanded)
+            
 
               mel_out = self.Projection(hidden_states_expanded.transpose(0,1)).transpose(1,2)
-              #mel_out.requires_grad_()
-              print('19',mel_out)
-              #print("kjjj")
+
               return (mel_out,pitch,energy,mel_out.shape[2])
 
 
@@ -387,20 +336,7 @@ for parameter in model3.mylin3.parameters():
 for parameter in model3.Projection.parameters():
     parameter.requires_grad = True         
 
-#for parameter in model3.Pitch.parameters():
-#    parameter.requires_grad = True     
-    
-#for parameter in model3.Energy.parameters():
-#    parameter.requires_grad = True 
-
-#for parameter in model3.parameters():
-#    parameter.requires_grad = False
 
 print(f'The model has {count_parameters(model3):,} trainable parameters')
-
-
-#model3.load_state_dict(torch.load("/home/common/dorohin.sv/makarova/FastSpeech2/vocoder_neural/weights/weights_right_50_unfrozen_1"))
-
-#print(f'The model has {count_parameters(model3):,} trainable parameters')
         
 model3.to(device)
