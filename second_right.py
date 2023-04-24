@@ -243,8 +243,12 @@ class MyFastSpeech(Model):
                    durations1 = torch.nn.functional.pad(durations1 ,  (1,mel_info.size(1)-durations1.size(1) -1), "constant", 0)
 
               durations = mel_info  + durations1 
+              hidden_padded = torch.zeros(durations.shape[1],1,256)
+              hidden_padded = hidden_padded.to(device)
+              hidden_padded[:hidden_states.shape[0],:,:] = hidden_states
 
-              hidden_states_expanded = self.LR(hidden_states, durations)
+              hidden_states_expanded = self.LR(hidden_padded, durations,alpha, inference=True)
+
 
 
               if(hidden_states_expanded.size(0))>5000:
