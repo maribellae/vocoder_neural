@@ -165,7 +165,7 @@ class MyFastSpeech(Model):
         self.Duration =self.Duration                                                     
         self.Pitch = self.Pitch                                                          
         self.Energy =self.Energy                                                         
-        #self.myNorm = nn.LayerNorm(256)                                                                              
+                                                                                   
 
         self.Projection =self.Projection                                                 
         
@@ -174,8 +174,6 @@ class MyFastSpeech(Model):
         self.myconv2 = nn.Conv2d(3, 1, 3)
         self.myfc1 = nn.Linear( 9792, 120)
       #  self.myfc1 = nn.Linear( 4464, 120)
-
-        #self.myfc1 = nn.Linear(2934, 120) #10 2934  , 100->6624
         self.myfc2 = nn.Linear(120, 84)
         self.myfc3 = nn.Linear(84, 10)
 
