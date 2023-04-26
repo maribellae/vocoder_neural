@@ -223,41 +223,37 @@ class Combined_model(Net, MyFastSpeech):
     def forward(self, text, padded ,len):
         #padded.requires_grad_() 
         padded = self.mypool(F.relu(self.myconv1(padded)))
-        print(padded)   
+       
         padded = self.mypool(F.relu(self.myconv2(padded)))
-        print(padded)     
+    
         padded = torch.flatten(padded, 1)
-        print(padded)     
+     
         padded = F.relu(self.myfc1(padded))
-        print(padded)      
+         
         padded = F.relu(self.myfc2(padded))
-        print(padded)        
+          
         melstext = self.myfc3(padded)
         melstext.requires_grad_()
-        print ('melstext', melstext)           
-        #device = torch.device("cuda" )
+
         text.requires_grad_()     
-        text_lengths = torch.tensor([text.shape[0]])      # [L]                              #torch.tensor([1, text.size(1)])
-              #print(text_lengths)
+        text_lengths = torch.tensor([text.shape[0]])     
+             
         mel_lengths = torch.tensor([len])
-             # print(mel_lengths)
+             
         text = text.unsqueeze(0) 
-              ### Prepare Inputs ###
-        print(text)
-              #print(text.shape)
+             
+       
         hidden_states = self.Embedding(text).transpose(0,1)
         hidden_states.requires_grad_()
-        print(hidden_states)
+    
         hidden_states += self.alpha1*(self.pe[:text.size(1)].unsqueeze(1))
-        print(hidden_states)  
-              ### Speech Synthesis ###
-              
-        #hidden_states = encoder_input
+
+
          
 
         text_mask = text.new_zeros(1,text.size(1)).to(torch.bool)
              
-              #print(text_mask, 'text_mask')
+         
         text_mask = text_mask.to(device)
             
         for layer in self.Encoder:
@@ -265,12 +261,11 @@ class Combined_model(Net, MyFastSpeech):
                                       src_key_padding_mask=text_mask)
            
 
-              #with info about mel
+     
                 
         mel_info = self.mylin3(melstext)
         mel_info.requires_grad_()
-        print ('melinfo', mel_info)
-              ### Duration Predictor ###
+ 
 
         durations1 = self.Duration(hidden_states.permute(1,2,0))
         print(durations1)     
@@ -281,9 +276,7 @@ class Combined_model(Net, MyFastSpeech):
         else:
                durations1 = torch.nn.functional.pad(durations1 ,  (0,mel_info.size(1)-durations1.size(1) ), "constant", 0)
         durations = mel_info  + durations1 
-        print('10', durations)
-        print(mel_info) 
-              #print(durations.shape)
+
               
         hidden_padded = torch.zeros(durations.shape[1],1,256)
         
@@ -294,8 +287,7 @@ class Combined_model(Net, MyFastSpeech):
 
         alpha=1.0      
         hidden_states_expanded = self.LR(hidden_padded, durations, alpha, inference=True)
-              #hidden_states_expanded = self.LR(hidden_states, durations, alpha, inference=True)
-        print( hidden_states_expanded)
+
 
 
         if(hidden_states_expanded.size(0))>5000:
@@ -304,9 +296,9 @@ class Combined_model(Net, MyFastSpeech):
 
               
         pitch = self.Pitch(hidden_states_expanded.permute(1,2,0))
-        print(pitch, 'pitch')
+
         energy = self.Energy(hidden_states_expanded.permute(1,2,0))
-        print(energy  ,'energy')
+
         pitch_one_hot = pitch_to_one_hot(pitch)
              
 
@@ -316,11 +308,8 @@ class Combined_model(Net, MyFastSpeech):
         hidden_states_expanded = hidden_states_expanded + pitch_one_hot.transpose(1,0) + energy_one_hot.transpose(1,0)       #check for all device attributes
         
 
-         
-        print(hidden_states_expanded , 'ttttt')
         hidden_states_expanded += self.alpha2*self.pe[:hidden_states_expanded.size(0)].unsqueeze(1)
               
-        print(hidden_states_expanded )
               
         mel_mask = text.new_zeros(1, hidden_states_expanded.size(0)).to(torch.bool)
              
@@ -328,19 +317,15 @@ class Combined_model(Net, MyFastSpeech):
              hidden_states_expanded, _ = layer(hidden_states_expanded,
                                                src_key_padding_mask=mel_mask)
              
-        print(hidden_states_expanded )
 
         mel_out = self.Projection(hidden_states_expanded.transpose(0,1)).transpose(1,2)
               
-        print('19',mel_out)
              
         return (mel_out,pitch,energy,mel_out.shape[2])
 
 
 model3 = Combined_model()
-#print(f'The model has {count_parameters(model3):,} trainable parameters')
-#print(model3)
- 
+
 for parameter in model3.parameters():
     parameter.requires_grad = False    
 
@@ -360,7 +345,7 @@ for parameter in model3.myfc2.parameters():
     parameter.requires_grad_()
 for parameter in model3.myfc3.parameters():
     parameter.requires_grad_()
-model3.mylin3.weight.requires_grad_()
+'''model3.mylin3.weight.requires_grad_()
 model3.mylin3.bias.requires_grad_()
 model3.myconv1.weight.requires_grad_()
 model3.myconv1.bias.requires_grad_()
@@ -369,19 +354,11 @@ model3.myconv2.bias.requires_grad_()
 model3.myfc2.weight.requires_grad_()
 model3.myfc2.bias.requires_grad_()
 model3.myfc3.weight.requires_grad_()
-model3.myfc3.bias.requires_grad_()
+model3.myfc3.bias.requires_grad_()'''
 
 
 
 
 print(f'The model has {count_parameters(model3):,} trainable parameters')
-#print("FCCCCCC")
-#print(model3.myfc3.parameters)
-#print(model3.myfc3.weight)
-#print("PROJECTION")
-#print(model3.Projection.parameters)
-#print(model3.Projection.weight)
-
-
 model3.to(device)
-print(f'The model has {count_parameters(model3):,} trainable parameters')
+
