@@ -281,9 +281,11 @@ def train(model3, device, data_len ,data, mels,lengths,  criterion, optimizer,it
         loss.retain_grad()
         model3.mylin3.weight.retain_grad() 
         loss.backward(retain_graph = True)
-     
+
+        print (model3.mylin3.weight.grad)            # NONE
+
         for name, p in model3.named_parameters():
-             print(name, p.grad)                          #ВСЕГДА ПИШЕТ NONE ДЛЯ ВЕСОВ NET МОДЕЛИ , ДЛЯ ВЕСОВ FASTSPEECH ВСЕ ОК
+             print(name, p.grad)                          #ВСЕГДА ПИШЕТ NONE ДЛЯ ВЕСОВ NET МОДЕЛИ , НО ДЛЯ ВЕСОВ FASTSPEECH ВСЕ ОК
       
        '''  myconv1.weight None
             myconv1.bias None
