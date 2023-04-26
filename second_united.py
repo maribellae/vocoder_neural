@@ -206,7 +206,9 @@ class Combined_model(Net, MyFastSpeech):
         super().__init__()
                 
     def forward(self, text, padded ,len):
-       
+        padded.requires_grad_()
+        text.requires_grad_()  
+
         padded = self.mypool(F.relu(self.myconv1(padded)))
        
         padded = self.mypool(F.relu(self.myconv2(padded)))
@@ -220,7 +222,7 @@ class Combined_model(Net, MyFastSpeech):
         melstext = self.myfc3(padded)
         melstext.requires_grad_()
 
-        text.requires_grad_()     
+            
         text_lengths = torch.tensor([text.shape[0]])     
              
         mel_lengths = torch.tensor([len])
