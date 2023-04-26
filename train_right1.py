@@ -285,7 +285,19 @@ def train(model3, device, data_len ,data, mels,lengths,  criterion, optimizer,it
         for name, p in model3.named_parameters():
              print(name, p.grad)                          #ВСЕГДА ПИШЕТ NONE ДЛЯ ВЕСОВ NET МОДЕЛИ , ДЛЯ ВЕСОВ FASTSPEECH ВСЕ ОК
       
- 
+       '''  myconv1.weight None
+            myconv1.bias None
+            myconv2.weight None
+            myconv2.bias None
+            myfc1.weight None                 #ВСЕГДА ПИШЕТ NONE ДЛЯ ВЕСОВ NET МОДЕЛИ , ДЛЯ ВЕСОВ FASTSPEECH ВСЕ ОК , ЕСЛИ ИХ ВКЛЮЧИТЬ
+            myfc1.bias None
+            myfc2.weight None
+            myfc2.bias None
+            myfc3.weight None
+            myfc3.bias None
+            mylin3.weight None
+            mylin3.bias None
+            '''
         optimizer.step()
         iter_meter.step()
         losses.append(loss.item())
