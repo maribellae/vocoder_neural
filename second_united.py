@@ -135,48 +135,6 @@ state_dict = {}
 for k, v in torch.load(checkpoint_path , map_location=torch.device('cpu'))['state_dict'].items():
    state_dict[k[7:]]=v
 
-
-
-def count_parameters(model):
-    for name, p in model.named_parameters():
-        if p.requires_grad :
-            print('dddd', name)
-    return sum(p.numel() for p in model.parameters() if p.requires_grad)
-    
-def get_mask_from_lengths(lengths):
-    max_len = torch.max(lengths).item()
-    ids = lengths.new_tensor(torch.arange(0, max_len)) #torch.arange(0, max_len)       lengths.new_tensor(torch.arange(0, max_len)), giving some warning
-    mask = (lengths.unsqueeze(1) <= ids).to(torch.bool)
-    return mask  
-    
-
-
-class Net(nn.Module):
-    def __init__(self):
-        super().__init__()
-        self.myconv1 = nn.Conv2d(1, 3, 3)
-        self.mypool = nn.MaxPool2d(2, 2)
-        self.myconv2 = nn.Conv2d(3, 1, 3)
-        self.myfc1 = nn.Linear(9792, 120)
-        self.myfc2 = nn.Linear(120, 84)
-        self.myfc3 = nn.Linear(84, 10)
-        self.mylin3 = nn.Linear(10, 20)  #to upsample output from mel-spectro  # NEED
-
-       
-
-#net = Net()           #.to(device)
-
-
-
-class MyFastSpeech(Model):
-    def __init__(self):
-        super(MyFastSpeech,self).__init__(hparams)
-        self.hp = hp
-        self.load_state_dict(state_dict)
-        self.Embedding = nn.Linear(1, 256) 
-        
-
-
 def energy_to_one_hot(e, is_inference = False, is_log_output = False, offset = 1):                                        #check for scale
     #e = de_norm_mean_std(e, hp.e_mean, hp.e_std)
     # For pytorch > = 1.6.0
@@ -206,22 +164,49 @@ def bucketize(tensor, bucket_boundaries):
         result += (tensor > boundary).int()
     return result
 
-
-#model2 = MyFastSpeech()
-
+def count_parameters(model):
+    for name, p in model.named_parameters():
+        if p.requires_grad :
+            print('dddd', name)
+    return sum(p.numel() for p in model.parameters() if p.requires_grad)
     
-   
-#model3.load_state_dict(torch.load("/home/common/dorohin.sv/makarova/FastSpeech2/vocoder_neural/weights/weights_right_30_rewrite_paddings_1"))
-#print(f'The  model2 has {count_parameters(model2):,} trainable parameters')
+def get_mask_from_lengths(lengths):
+    max_len = torch.max(lengths).item()
+    ids = lengths.new_tensor(torch.arange(0, max_len)) #torch.arange(0, max_len)       lengths.new_tensor(torch.arange(0, max_len)), giving some warning
+    mask = (lengths.unsqueeze(1) <= ids).to(torch.bool)
+    return mask  
+    
+
+
+class Net(nn.Module):
+    def __init__(self):
+        super().__init__()
+        self.myconv1 = nn.Conv2d(1, 3, 3)
+        self.mypool = nn.MaxPool2d(2, 2)
+        self.myconv2 = nn.Conv2d(3, 1, 3)
+        self.myfc1 = nn.Linear(9792, 120)
+        self.myfc2 = nn.Linear(120, 84)
+        self.myfc3 = nn.Linear(84, 10)
+        self.mylin3 = nn.Linear(10, 20)  #to upsample output from mel-spectro  # NEED
+
+
+
+
+class MyFastSpeech(Model):
+    def __init__(self):
+        super(MyFastSpeech,self).__init__(hparams)
+        self.hp = hp
+        self.load_state_dict(state_dict)
+        self.Embedding = nn.Linear(1, 256) 
         
-#model2.to(device)
+
 
 class Combined_model(Net, MyFastSpeech):
     def __init__(self):
         super().__init__()
                 
     def forward(self, text, padded ,len):
-        #padded.requires_grad_() 
+       
         padded = self.mypool(F.relu(self.myconv1(padded)))
        
         padded = self.mypool(F.relu(self.myconv2(padded)))
@@ -260,15 +245,12 @@ class Combined_model(Net, MyFastSpeech):
              hidden_states, _ = layer(hidden_states,
                                       src_key_padding_mask=text_mask)
            
-
-     
-                
+       
         mel_info = self.mylin3(melstext)
         mel_info.requires_grad_()
  
 
         durations1 = self.Duration(hidden_states.permute(1,2,0))
-        print(durations1)     
              
                
         if (durations1.size(1)- mel_info.size(1))>=0 :
