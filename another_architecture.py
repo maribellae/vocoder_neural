@@ -239,7 +239,7 @@ class Combined_model( MyFastSpeech):
             
         text_len = text.shape[1]
       
-     '''   text_len = text.shape[1]
+        '''   text_len = text.shape[1]
         
         if(text_len <10):
           text_padded = torch.zeros(1,10)
