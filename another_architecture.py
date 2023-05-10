@@ -209,7 +209,7 @@ class Combined_model( MyFastSpeech):
         self.MyNet = Net() 
 
        
-    def forward(self, text, padded ,len):
+    def forward(self, text, padded ):
 
         padded.requires_grad_()
 
