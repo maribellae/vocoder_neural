@@ -141,7 +141,7 @@ from another_architecture import model3
 model3.to(device)
 
 
-from preprocess_right1 import  input_lengths, mel_pad , datas
+from preprocess_right import datas
 
 
 class TransformerLoss(nn.Module):
@@ -215,7 +215,7 @@ def train(model3, device, data_len ,data,  criterion, optimizer,iter_meter):
              
         optimizer.zero_grad()
         with torch.enable_grad():
-             mel_out, pitch_out,energy_out,duration_out = model3(word, mel)
+             mel_out, pitch_out,energy_out,duration_out, len  = model3(word, mel)
 
         mel_cut = mel
 
