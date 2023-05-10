@@ -333,8 +333,8 @@ for parameter in model3.MyNet.myfc2.parameters():
     parameter.requires_grad_()
 for parameter in model3.MyNet.mymaxpooling.parameters():
     parameter.requires_grad_()
-for parameter in model3.parameters():
-    parameter.requires_grad = False
+#for parameter in model3.parameters():
+#    parameter.requires_grad = False
 
 print(f'The model has {count_parameters(model3):,} trainable parameters')
 #model3.load_state_dict(torch.load("/home/common/dorohin.sv/makarova/FastSpeech2/vocoder_neural/weights/weights_right_27april_withoutconvs_10"))
