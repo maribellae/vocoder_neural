@@ -136,7 +136,7 @@ from torch.utils.tensorboard import SummaryWriter
 writer = SummaryWriter('losses')
 
 device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
-from second_united import model3
+from another_architecture import model3
 
 model3.to(device)
 
