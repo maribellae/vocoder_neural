@@ -131,6 +131,10 @@ from utils.plot_image import *
 import random
 from utils.utils import get_mask_from_lengths
 
+
+from torch.utils.tensorboard import SummaryWriter
+writer = SummaryWriter('losses')
+
 device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 from second_united import model3
 
@@ -214,7 +218,6 @@ def train(model3, device, data_len ,data, mels,lengths,  criterion, optimizer,it
              mel_out, pitch_out,energy_out,duration_out,length = model3(word, mel,len)
 
         mel_cut = mel[:,:,:len]
-
 
 
         if (mel_cut.shape[2]!=pitch.shape[1]) :
@@ -304,15 +307,15 @@ def train(model3, device, data_len ,data, mels,lengths,  criterion, optimizer,it
         loss.backward()
     #    for name, p in model3.named_parameters():
     #         print(name, p.grad)
- 
+
         optimizer.step()
         iter_meter.step()
-        losses.append(loss.item())
+      #  losses.append(loss.item())
         full_loss +=loss.item() 
    
              
-    return(full_loss,losses)    
-
+   # return(full_loss,losses)   
+return(full_loss)    
 
 
 def check(model3, device, data_len ,data, mels,lengths,  iter_meter):
@@ -390,9 +393,6 @@ criterion = TransformerLoss().to(device)
 optimizer = torch.optim.Adam(list(model3.parameters()) , lr=3e-4 ,betas=(0.9, 0.98),eps=1e-09)
 
 
-
-
-
 #print(model3)
 model3.train()
 
@@ -400,12 +400,13 @@ epochs = 10
 #A = model3.mylin3.weight
 #B = model3.Projection.weight
 for epoch in range(1, epochs + 1):
-      full_loss ,losses  = train(model3, device,2620,datas, mel_pad, input_lengths, criterion, optimizer,  iter_meter)
-      print("Epoch  ",  epoch , "MEAN LOSS IS  " , full_loss/2620)
+      full_loss ,losses  = train(model3, device,datas.shape[0],datas, mel_pad, input_lengths, criterion, optimizer,  iter_meter)
+      #print("Epoch  ",  epoch , "MEAN LOSS IS  " , full_loss/2620)
+      writer.add_scalar('training loss', full_loss/datas.shape[0], epoch) 
 
       #if ((epoch  == 1)or(epoch  == 25)or(epoch == 50)or(epoch == 75) or (epoch==100)) :
       if ((epoch  == 1)or(epoch  == 5)or(epoch == 10)): 
-           with open("/home/common/dorohin.sv/makarova/FastSpeech2/vocoder_neural/metrics/metrics_right_27april_withoutconvs_{}.txt".format(epoch), "w") as output:
-                output.write(str(losses))
+         #  with open("/home/common/dorohin.sv/makarova/FastSpeech2/vocoder_neural/metrics/metrics_right_27april_withoutconvs_{}.txt".format(epoch), "w") as output:
+          #      output.write(str(losses))
            torch.save(model3.state_dict(), "/home/common/dorohin.sv/makarova/FastSpeech2/vocoder_neural/weights/weights_right_27april_withoutconvs_{}".format(epoch))
       
