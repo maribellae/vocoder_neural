@@ -154,13 +154,13 @@ def get_mask_from_lengths(lengths):
 class Net(nn.Module):
     def __init__(self):
         super().__init__()
-        self.mymaxpooling = nn.AdaptiveMaxPool2d((100,100))
+        self.mymaxpooling = nn.AdaptiveMaxPool2d((80,200))
         self.myconv1 = nn.Conv2d(1, 3, 3)
         self.mypool = nn.MaxPool2d(2, 2)
         self.myconv2 = nn.Conv2d(3, 1, 3)
       #  self.myfc1 = nn.Linear(529, 60)
      #   self.myfc2 = nn.Linear(60, 10) 
-        self.myfc1 = nn.Linear(529, 100)
+        self.myfc1 = nn.Linear(864, 100)
         self.myfc2 = nn.Linear(100, 50) 
       
 class MyFastSpeech(Model):
