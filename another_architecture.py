@@ -158,9 +158,11 @@ class Net(nn.Module):
         self.myconv1 = nn.Conv2d(1, 3, 3)
         self.mypool = nn.MaxPool2d(2, 2)
         self.myconv2 = nn.Conv2d(3, 1, 3)
-        self.myfc1 = nn.Linear(529, 60)
-        self.myfc2 = nn.Linear(60, 10) 
-
+      #  self.myfc1 = nn.Linear(529, 60)
+     #   self.myfc2 = nn.Linear(60, 10) 
+        self.myfc1 = nn.Linear(529, 100)
+        self.myfc2 = nn.Linear(100, 50) 
+      
 class MyFastSpeech(Model):
     def __init__(self):
         super(MyFastSpeech,self).__init__(hparams)
@@ -230,8 +232,8 @@ class Combined_model( MyFastSpeech):
         text_lengths = torch.tensor([text.shape[0]])     
         mel_lengths = torch.tensor([len])
         text =text.T
-        
         text_len = text.shape[1]
+     '''   text_len = text.shape[1]
         
         if(text_len <10):
           text_padded = torch.zeros(1,10)
@@ -240,10 +242,13 @@ class Combined_model( MyFastSpeech):
           text.requires_grad()
           
         mel_padded = torch.zeros(1,text_len)
+        mel_padded[:,:padded.shape[1]] = padded.clone()
         mel_padded = mel_padded.to(device)
         mel_padded.requires_grad_()
-        text += mel_padded
+        text += mel_padded'''
         
+        text += padded[:,:text_len]
+         
         hidden_states = self.Embedding(text.long()).transpose(0,1)
 
      
