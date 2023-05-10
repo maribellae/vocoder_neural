@@ -308,7 +308,7 @@ class Combined_model( MyFastSpeech):
               
         
              
-        return (mel_out,pitch,energy,durations)
+        return (mel_out,pitch,energy,durations,mel_out.shape[2])
 
 
 model3 = Combined_model()
