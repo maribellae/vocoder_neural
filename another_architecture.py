@@ -232,7 +232,13 @@ class Combined_model( MyFastSpeech):
         text_lengths = torch.tensor([text.shape[0]])     
         mel_lengths = torch.tensor([len])
         text =text.T
+      
+        if text.shape[1]>50:
+            print("text is larger")
+            text = text[:,:50]
+            
         text_len = text.shape[1]
+      
      '''   text_len = text.shape[1]
         
         if(text_len <10):
