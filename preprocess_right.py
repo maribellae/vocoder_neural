@@ -256,6 +256,6 @@ def PaddingData(batch):
           
         return  mel_pad, output_lengths
                       
-mel_pad, input_lengths = PaddingData(datas)   
+# mel_pad, input_lengths = PaddingData(datas)   
                         
                         
