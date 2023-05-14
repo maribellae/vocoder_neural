@@ -1,6 +1,3 @@
-#import sys
-#sys.path.append("..")
-
 from torchinfo import summary
 import numpy as np
 import matplotlib.pyplot as plt
@@ -160,8 +157,8 @@ class Net(nn.Module):
         self.myconv2 = nn.Conv2d(3, 1, 3)
       #  self.myfc1 = nn.Linear(529, 60)
      #   self.myfc2 = nn.Linear(60, 10) 
-        self.myfc1 = nn.Linear(864, 100)
-        self.myfc2 = nn.Linear(100, 50) 
+        self.myfc1 = nn.Linear(864, 50)
+        self.myfc2 = nn.Linear(50, 256) 
       
 class MyFastSpeech(Model):
     def __init__(self):
@@ -227,37 +224,14 @@ class Combined_model( MyFastSpeech):
            
         padded = F.relu(self.MyNet.myfc2(padded))
             
-        
-        #print(text.shape)              
+        padded = padded[None,:,:]
+           
         text_lengths = torch.tensor([text.shape[0]])     
-        mel_lengths = torch.tensor([len])
         text =text.T
-      
-        if text.shape[1]>50:
-            print("text is larger")
-            text = text[:,:50]
-            
-        text_len = text.shape[1]
-      
-        '''   text_len = text.shape[1]
         
-        if(text_len <10):
-          text_padded = torch.zeros(1,10)
-          text_padded[:,:text_len] = text.clone()
-          text = text_padded.to(device)
-          text.requires_grad()
-          
-        mel_padded = torch.zeros(1,text_len)
-        mel_padded[:,:padded.shape[1]] = padded.clone()
-        mel_padded = mel_padded.to(device)
-        mel_padded.requires_grad_()
-        text += mel_padded'''
-        
-        text += padded[:,:text_len]
-         
+ 
         hidden_states = self.Embedding(text.long()).transpose(0,1)
-
-     
+        hidden_states[:,:,:] = hidden_states[:,:,:] + padded
         hidden_states += self.alpha1*(self.pe[:text.size(1)].unsqueeze(1))
          
 
@@ -318,7 +292,12 @@ class Combined_model( MyFastSpeech):
 
 
 model3 = Combined_model()
+
+
+
+#model3.load_state_dict(torch.load("/home/common/dorohin.sv/makarova/FastSpeech2/vocoder_neural/weights/weights_11_may_15"))
  
+
 for parameter in model3.parameters():
     parameter.requires_grad = False    
 #model3.load_state_dict(torch.load("/home/common/dorohin.sv/makarova/FastSpeech2/vocoder_neural/weights/weights_right_26_april_50"))
@@ -343,6 +322,6 @@ for parameter in model3.MyNet.mymaxpooling.parameters():
 #    parameter.requires_grad = False
 
 print(f'The model has {count_parameters(model3):,} trainable parameters')
-#model3.load_state_dict(torch.load("/home/common/dorohin.sv/makarova/FastSpeech2/vocoder_neural/weights/weights_right_27april_withoutconvs_10"))
+#model3.load_state_dict(torch.load("/home/common/dorohin.sv/makarova/FastSpeech2/vocoder_neural/weights/weights_11_may_15"))
 
 model3.to(device)
