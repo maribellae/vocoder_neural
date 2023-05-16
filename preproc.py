@@ -201,6 +201,22 @@ def pad_or_trim(array, length: int = N_SAMPLES, *, axis: int = -1):
     
 from tqdm import tqdm
 
+
+g2p = G2p()
+def prepare_input(text):
+    text = punctuation_removers(text)
+    phonemes = g2p(text)
+    #print(phonemes)
+    for i in range(0,len(phonemes)):
+        if phonemes[i] == " ":
+            phonemes[i]= "pau"
+
+    sequence = phonemes_to_sequence(phonemes)
+    return sequence
+
+
+
+
 i=0
 for audios in tqdm(loader):
     i+=1
@@ -233,8 +249,8 @@ for audios in tqdm(loader):
     e = torch.norm(mag, dim=0)                      # [T, ]
     p = p[:mel.shape[1]]
     p = np.array(p, dtype='float32')
-
-    datas.append([predicted_words,mel,p,e])    
+    words = prepare_input(predicted_words[0])
+    datas.append([words,mel,p,e])    
    # if (i==1):
    #    break                    
 
