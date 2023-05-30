@@ -13,8 +13,19 @@
 
 3)   Download [these](https://drive.google.com/file/d/12jW1KivfEjv4YBs6gAZVdVWJ-muZv6CQ/view) checkpoints and place them into vocoder_neural/ folder 
 
+4)   ` cd FastSpeech2 `
 
-4)  `python vocoder_neural/download_lj.py`
+
+5)  `python download_lj.py`
 
 
-5)  `python vocoder_neural/train.py`
+6)  `python audio_preprocess.py`
+
+
+7)  `git clone https://github.com/tapsoft/tts.git `
+
+
+8)   `python audio_preprocess_embeddings.py`
+
+
+9)   `python train_git6.py`
