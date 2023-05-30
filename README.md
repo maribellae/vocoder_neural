@@ -28,4 +28,7 @@
 8)   `python audio_preprocess_embeddings.py`
 
 
-9)   `python train_git6.py`
+9) change batch_size in FastSpeech2/hparams.py from 8 to 10
+
+
+10)   `python train_git6.py`
