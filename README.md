@@ -14,7 +14,7 @@
 3)   Download [these](https://drive.google.com/file/d/12jW1KivfEjv4YBs6gAZVdVWJ-muZv6CQ/view) checkpoints and place them into vocoder_neural/ folder 
 
 
-4)  `python vocoder_neural/download_dataset.py`
+4)  `python vocoder_neural/download_lj.py`
 
 
 5)  `python vocoder_neural/train.py`
