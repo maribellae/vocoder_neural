@@ -30,5 +30,15 @@
 
 9) change batch_size in FastSpeech2/hparams.py from 8 to 10
 
+if train - >
 
 10)   `python train_git6.py`
+
+
+if eval speech synthesis - > 
+
+11)  Download [these](https://drive.google.com/file/d/167n_gl4FdxzTsb42ThgPYB0ZLZytjS8e/view?usp=sharing) checkpoints and place them into vocoder_neural/weights/ folder
+
+if eval full vocoder model -> 
+
+12) 
